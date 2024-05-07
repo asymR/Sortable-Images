@@ -1,8 +1,0 @@
-eval "$(ssh-agent -s)"
-ssh-add image-sortable
-ssh -T git@github.com
-git remote -v
-git remote set-url origin git@github.com:asymR/Sortable-Images.git
-git push --set-upstream origin main
-
-image
