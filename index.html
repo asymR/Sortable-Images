@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Sortable</title>
+    <link rel="stylesheet" href="./sortable-images.css">
+    <style>button{ cursor: pointer; }</style>
+</head>
+<body>
+    <div style="margin: auto; padding: 2.5rem;">
+        <div style="text-align: center;">
+            <input type="file" id="fileInput" multiple style="border: solid 1px lightgrey; outline: none; padding: 10px; border-radius: 5px; font-size: 16px;" accept=".jpg, .png, .jpeg, .webp">
+        </div>
+        <div id="sortableImagesPreviewContainer"></div>
+        <div style="text-align: center;">
+            <button id="getSortedImagesButton" type="button" onclick="getSortedImages()" style="border: solid 1px lightgrey; outline: none; padding: 10px; border-radius: 5px; font-size: 16px; display: none;">Get Sorted Images</button>
+        </div>
+    </div>
+    <script src="./jquery-3.6.0.min.js"></script>
+    <script src="./jquery-ui.js"></script>
+    <script src="./sortable-images.js"></script>
+    <script>
+        ImagePreviewLibrary.enableImagePreview('fileInput', 'sortableImagesPreviewContainer');
+        document.getElementById("fileInput").addEventListener("change", function () {
+            $("#getSortedImagesButton").show();
+        });
+        function getSortedImages() {
+            var sortedFiles = ImagePreviewLibrary.getSortedFiles();
+            var formData = new FormData();
+            sortedFiles.forEach(function(file, index) {
+                formData.append('files[]', file);
+            });
+            fetch('sorted-images' /* URL / API KEY */ , {
+                method: 'POST',
+                body: formData,
+            })
+            .then(response => response.json())
+            .then(data => {
+                if(data.success){
+                    console.log("You have successfully saved sorted images");
+                }else{
+                    console.log("Something went wrong with your method to save images");
+                }
+            })
+            .catch(error => {
+                console.log("Something went wrong to request url");
+            });
+        }
+    </script>
+</body>
+</html>
